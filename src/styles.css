@@ -1,9 +1,9 @@
 /*
- * @christopherpark/ui design tokens.
+ * @ceepeetres/ui design tokens.
  *
  * Consumers import this AFTER tailwindcss:
  *   @import "tailwindcss";
- *   @import "@christopherpark/ui/styles.css";
+ *   @import "@ceepeetres/ui/styles.css";
  *
  * The @source line below makes the consumer's Tailwind scan this package's
  * compiled components, so no extra config is needed in the app.

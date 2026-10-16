@@ -1,4 +1,4 @@
-# @christopherpark/ui
+# @ceepeetres/ui
 
 My React component library: Tailwind v4 + Radix primitives, documented in Storybook.
 
@@ -22,7 +22,7 @@ Add a component:
 ```bash
 pnpm dev                                   # rebuild dist/ on change
 cd ../my-app && pnpm link ../ui            # point the app at your local copy
-# ...when done: pnpm unlink @christopherpark/ui && pnpm install
+# ...when done: pnpm unlink @ceepeetres/ui && pnpm install
 ```
 
 ## Release
@@ -44,7 +44,7 @@ The package ships plain Tailwind class names, not compiled CSS. `dist/styles.css
 
 ```css
 @import "tailwindcss";
-@import "@christopherpark/ui/styles.css";
+@import "@ceepeetres/ui/styles.css";
 ```
 
 To re-theme for a specific app, override the CSS variables in that app's `:root` / `.dark`.
