@@ -1,26 +1,27 @@
 import { cva } from "class-variance-authority";
 
-// Kept out of button.tsx (a client module) so server components can call it,
-// e.g. to style a <Link> without wrapping it in <Button asChild>.
 export const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-[color,background-color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[disabled]:not-data-[loading]:pointer-events-none data-[disabled]:opacity-50 data-[loading]:cursor-progress data-[loading]:data-[disabled]:opacity-80 aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 aria-invalid:outline-1 aria-invalid:outline-destructive dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        outline: "border bg-background hover:bg-accent hover:text-accent-foreground",
+        default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+        destructive: "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90",
+        outline: "border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        sm: "h-8 px-3",
-        default: "h-9 px-4",
-        lg: "h-10 px-6",
+        default: "h-9 px-4 py-2 has-[svg]:px-3",
+        sm: "h-8 gap-1.5 px-3 has-[svg]:px-2.5",
+        lg: "h-10 px-6 has-[svg]:px-4",
         icon: "size-9",
       },
     },
-    defaultVariants: { variant: "default", size: "default" },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
   },
 );
