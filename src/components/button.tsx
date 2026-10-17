@@ -19,7 +19,7 @@ export interface ButtonProps
   /**
    * Animate the width when the content changes (e.g. "Save" → "Saving…").
    * Turn off when the width comes from layout (`w-full`, a fixed width, a grid cell),
-   * since the animation sets an explicit width. Always off for `size="icon"`.
+   * since the animation sets an explicit width. Always off for icon-only sizes.
    * @default true
    */
   animateWidth?: boolean;
@@ -40,7 +40,9 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const animated = animateWidth && size !== "icon";
+  const iconOnly = size === "icon" || size === "icon-sm" || size === "icon-lg";
+  const animated = animateWidth && !iconOnly;
+  const content = loading ? (iconOnly ? <Spinner /> : withSpinner(children)) : children;
   const [contentRef, width] = useAnimatedWidth(animated);
 
   return (
@@ -57,14 +59,10 @@ export function Button({
       {animated ? (
         // Measured to find the width the button should animate to.
         <span ref={contentRef} className="inline-flex shrink-0 items-center justify-center gap-[inherit]">
-          {loading && <Spinner />}
-          {children}
+          {content}
         </span>
       ) : (
-        <>
-          {loading && <Spinner />}
-          {loading && size === "icon" ? null : children}
-        </>
+        content
       )}
     </ButtonPrimitive>
   );
@@ -107,6 +105,21 @@ function useAnimatedWidth(enabled: boolean): [React.RefObject<HTMLSpanElement | 
   }, [enabled, reduceMotion, width]);
 
   return [contentRef, width];
+}
+
+/**
+ * Prepends the spinner. A leading icon (an element followed by text, as in
+ * `<PlusIcon /> New project`) is swapped out for it, so the spinner takes its place.
+ */
+function withSpinner(children: React.ReactNode): React.ReactNode {
+  const nodes = React.Children.toArray(children);
+  const [first, ...rest] = nodes;
+  if (nodes.length === 1 && React.isValidElement<{ children?: React.ReactNode }>(first) && first.type === React.Fragment) {
+    return withSpinner(first.props.children);
+  }
+  const hasLeadingIcon =
+    React.isValidElement(first) && rest.some((node) => typeof node === "string" || typeof node === "number");
+  return [<Spinner key="spinner" />, ...(hasLeadingIcon ? rest : nodes)];
 }
 
 function Spinner() {

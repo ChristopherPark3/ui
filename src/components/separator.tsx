@@ -1,0 +1,17 @@
+import * as React from "react";
+import { Separator as SeparatorPrimitive } from "@base-ui/react/separator";
+import { cnState } from "../lib/cn.js";
+
+export function Separator({ className, orientation = "horizontal", ...props }: SeparatorPrimitive.Props) {
+  return (
+    <SeparatorPrimitive
+      data-slot="separator"
+      orientation={orientation}
+      className={cnState(
+        "shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:self-stretch",
+        className,
+      )}
+      {...props}
+    />
+  );
+}

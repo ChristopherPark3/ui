@@ -13,7 +13,7 @@ const meta = {
       control: "select",
       options: ["default", "destructive", "outline", "secondary", "ghost", "link"],
     },
-    size: { control: "select", options: ["default", "sm", "lg", "icon"] },
+    size: { control: "select", options: ["default", "sm", "lg", "icon", "icon-sm", "icon-lg"] },
     disabled: { control: "boolean" },
     loading: { control: "boolean" },
     "aria-invalid": { control: "boolean" },
@@ -69,7 +69,13 @@ export const Sizes: Story = {
       <Button {...args} size="lg">
         Large
       </Button>
+      <Button {...args} size="icon-sm" aria-label="Add">
+        <PlusIcon />
+      </Button>
       <Button {...args} size="icon" aria-label="Add">
+        <PlusIcon />
+      </Button>
+      <Button {...args} size="icon-lg" aria-label="Add">
         <PlusIcon />
       </Button>
     </div>
@@ -145,6 +151,35 @@ export const LoadingStates: Story = {
       </Button>
     </div>
   ),
+};
+
+const ArrowRightIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </svg>
+);
+
+/** The spinner takes the place of a leading icon. Trailing icons stay. */
+export const LoadingWithIcon: Story = {
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-3">
+      <Button {...args} loading>
+        <PlusIcon />
+        New project
+      </Button>
+      <Button {...args} loading variant="outline">
+        Continue
+        <ArrowRightIcon />
+      </Button>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const leading = canvas.getByRole("button", { name: "New project" });
+    const trailing = canvas.getByRole("button", { name: "Continue" });
+    await expect(leading.querySelectorAll("svg")).toHaveLength(1);
+    await expect(leading.querySelector("svg")).toHaveClass("animate-spin");
+    await expect(trailing.querySelectorAll("svg")).toHaveLength(2);
+  },
 };
 
 /** Error state, e.g. a form's submit button when the form has errors. Set `aria-invalid`. */
