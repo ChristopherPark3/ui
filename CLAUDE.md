@@ -27,7 +27,7 @@ Tailwind v4 (no tailwind.config; tokens live in `src/styles.css`), [Base UI](htt
 - Add `data-slot="<name>"` on each part's root element.
 - Variants go through `cva`. Export the `xxxVariants` function only if apps need it. If the component file has `"use client"`, put the cva definition in a separate `<name>-variants.ts` so server components can call it.
 - `"use client"` only when the wrapper file itself needs it: hooks, context, or passing functions (render functions, event handlers) to Base UI. Base UI's parts are already client components, so a wrapper that only passes strings and JSX (Dialog, Tabs, Input, …) stays server-importable without it. Today only `button.tsx`, `input.tsx`, `textarea.tsx`, `toggle-group.tsx` and `toast.tsx` need it.
-- Styling uses semantic tokens only (`bg-primary`, `text-muted-foreground`, `border-input`, `ring-ring`, `bg-destructive`, …), never raw colors like `bg-blue-500`. Every component must look right in both light and `.dark`.
+- Styling uses semantic tokens only (`bg-primary`, `text-muted-foreground`, `border-input`, `ring-ring`, `bg-destructive`, …), never raw colors like `bg-blue-500`. Every component must look right in both light and `.dark`; tests check contrast in both. Solid destructive fills use `dark:bg-destructive/60` because the dark `--destructive` is bright enough for text but too bright under white text.
 - New design tokens go in `src/styles.css` in all three places: `:root`, `.dark`, and `@theme inline`.
 - Focus style: `outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50`. Disabled style: `disabled:pointer-events-none disabled:opacity-50` on plain elements; on Base UI parts use `data-[disabled]:` instead (it also covers `focusableWhenDisabled`, which uses `aria-disabled`).
 - Use Base UI for anything with focus management, keyboard navigation, or ARIA patterns. Don't hand-roll them.
@@ -41,7 +41,7 @@ Tailwind v4 (no tailwind.config; tokens live in `src/styles.css`), [Base UI](htt
 - `title: "Components/<Name>"`, `meta` typed with `satisfies Meta<typeof X>`, plus `argTypes` select controls for variants.
 - Include a Default story and one story per meaningful state (variants, disabled, invalid, …).
 - Interactive components get a `play` function that asserts behavior (`storybook/test`: `expect`, `fn`, `userEvent`). Portaled content (dialogs, popovers) is found via `within(document.body)`.
-- Run `pnpm test` before calling a component done. It must pass with no new a11y violations. a11y runs in `todo` mode, so violations don't fail the run: check the a11y panel or the JSON reporter (`pnpm vitest run --reporter=json --outputFile=…`, `meta.reports`).
+- Run `pnpm test` before calling a component done. Every story runs twice, in light and dark (`storybook` and `storybook (dark)` projects), and a11y runs in `error` mode, so any violation (contrast included) fails the run and CI. For details on a failure, use the a11y panel or the JSON reporter (`pnpm vitest run --reporter=json --outputFile=…`, `meta.reports`).
 - Elements that fade in are briefly `opacity: 0`; wrap visibility checks in `waitFor`. Exiting popups/panels stay in the DOM until their transition ends, so query by name (`getByRole("tabpanel", { name })`).
 - Base UI tooltips have no `tooltip` role; menus move `data-highlighted` rather than DOM focus.
 
