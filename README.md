@@ -1,6 +1,6 @@
 # @ceepeetres/ui
 
-My React component library: Tailwind v4 + Radix primitives, documented in Storybook.
+My React component library: Tailwind v4 + Base UI primitives, documented in Storybook.
 
 ## Develop
 
@@ -13,7 +13,7 @@ pnpm test          # runs every story as a browser test (interactions + a11y)
 
 Add a component:
 
-1. `src/components/<name>.tsx`. Add `"use client"` at the top only if it uses hooks, event handlers, or a client-only Radix primitive.
+1. `src/components/<name>.tsx`. Add `"use client"` at the top only if it uses hooks, event handlers, or an interactive Base UI part.
 2. `src/components/<name>.stories.tsx`
 3. Export it from `src/index.ts`
 
