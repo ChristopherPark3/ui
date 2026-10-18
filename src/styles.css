@@ -7,14 +7,16 @@
  *
  * The @source line below makes the consumer's Tailwind scan this package's
  * compiled components, so no extra config is needed in the app.
- * Override any token in the app by redefining the CSS variable in :root / .dark.
+ * Theme an app by redefining these variables in its own :root / .dark, after the import.
+ * Usually --primary, --primary-foreground and --ring are enough for a brand color,
+ * and --radius scales every corner. See the README and Storybook's Foundations/Theming.
  */
 @source "./";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.625rem; /* rounded-lg; -sm/-md/-xl/-2xl are derived from it */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -82,6 +84,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 6px);
 
   --animate-progress-indeterminate: progress-indeterminate 1.5s ease-in-out infinite;
 
