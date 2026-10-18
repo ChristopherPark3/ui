@@ -1,5 +1,11 @@
 # @ceepeetres/ui
 
+## 0.3.0
+
+### Minor Changes
+
+- 8734395: Add Spinner, Skeleton and Empty. Combobox and Autocomplete get a `loading` prop (spinner in the input, `aria-busy`) and a `Status` part for announcing async results.
+
 ## 0.2.0
 
 ### Minor Changes
