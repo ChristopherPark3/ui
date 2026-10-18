@@ -4,12 +4,23 @@ Personal React component library. Published to npm, consumed by apps made from `
 
 ## Commands
 
-- `nvm use` first: Node 22 required (system Node is too old).
+- Node 22 required (`.nvmrc`; system Node is too old): `nvm use`, or put Node 22's `bin` on `PATH` if nvm won't switch.
 - `pnpm storybook`: dev server at http://localhost:6006
 - `pnpm test`: runs every story as a Vitest browser test (play functions and a11y checks)
 - `pnpm typecheck` / `pnpm build`
 - `pnpm check:client`: fails if a component's `"use client"` doesn't match what it does (runs in CI)
 - `pnpm changeset`: required for any user-facing change (new component = minor, fix = patch)
+
+## Releasing
+
+Never run `npm publish` or bump `version` by hand; Changesets does both.
+
+1. Work on a branch and include a `.changeset/*.md` for each user-facing change (`pnpm changeset`, or write the file: frontmatter `"@ceepeetres/ui": minor|patch`, then a one-line summary that becomes the CHANGELOG entry). Docs, story or test-only changes don't need one.
+2. Open a PR to `main`. CI (`.github/workflows/ci.yml`) runs typecheck, `check:client`, build, tests and the Storybook build.
+3. Merging it triggers `.github/workflows/release.yml`, which opens (or updates) a **Version Packages** PR from `changeset-release/main` that bumps `package.json` and writes `CHANGELOG.md`.
+4. Merging the Version Packages PR publishes to npm (`NPM_TOKEN` secret) and tags the release. Separately, every push to `main` redeploys Storybook to GitHub Pages (`storybook.yml`).
+
+Merging PRs and publishing are the owner's call: ask before merging either PR. While still 0.x, breaking changes are `minor`; call them out in the changeset and PR.
 
 ## Stack
 
