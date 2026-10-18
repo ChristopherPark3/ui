@@ -32,6 +32,16 @@ export {
 } from "./components/autocomplete.js";
 export { Avatar, AvatarImage, AvatarFallback } from "./components/avatar.js";
 export { Badge, badgeVariants, type BadgeProps } from "./components/badge.js";
+export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  type BreadcrumbLinkProps,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+} from "./components/breadcrumb.js";
 export { Button, type ButtonProps } from "./components/button.js";
 export { buttonVariants } from "./components/button-variants.js";
 export {
@@ -179,6 +189,16 @@ export { Skeleton } from "./components/skeleton.js";
 export { Slider, type SliderProps, SliderLabel, SliderValue } from "./components/slider.js";
 export { Spinner } from "./components/spinner.js";
 export { Switch } from "./components/switch.js";
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableCaption,
+} from "./components/table.js";
 export { Tabs, TabsList, type TabsListProps, TabsTab, TabsPanel } from "./components/tabs.js";
 export { Textarea, type TextareaProps } from "./components/textarea.js";
 export { Toaster, ToastProvider, useToastManager, createToastManager } from "./components/toast.js";
