@@ -47,4 +47,30 @@ The package ships plain Tailwind class names, not compiled CSS. `dist/styles.css
 @import "@ceepeetres/ui/styles.css";
 ```
 
-To re-theme for a specific app, override the CSS variables in that app's `:root` / `.dark`.
+## Theming
+
+The library is neutral (grayscale) by default. Each app brings its own brand by redefining tokens in its global CSS, **after** the import:
+
+```css
+@import "tailwindcss";
+@import "@ceepeetres/ui/styles.css";
+
+:root {
+  --primary: oklch(0.51 0.23 277);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.67 0.18 277);
+  --radius: 0.75rem;
+}
+
+.dark {
+  --primary: oklch(0.78 0.12 277);
+  --primary-foreground: oklch(0.2 0.06 277);
+  --ring: oklch(0.55 0.18 277);
+}
+```
+
+- **Brand color:** `--primary` + `--primary-foreground` (buttons, badges, checked states, sliders) and `--ring` (focus rings). That's usually all a brand needs.
+- **Surfaces and text:** `--background`, `--foreground`, `--card`, `--popover`, `--secondary`, `--muted`, `--accent`, `--border`, `--input`, each with a `-foreground` where it holds text. See the full list in [`src/styles.css`](src/styles.css).
+- **Corners:** `--radius` (default `0.625rem`) is `rounded-lg`; every other radius is derived from it, so one value rounds or squares off the whole library.
+- **Contrast:** keep each surface and its `-foreground` at 4.5:1 or better, in both `:root` and `.dark`. The library's own tests enforce that for the default tokens, but not for an app's overrides.
+- Storybook's **Foundations/Theming** shows the palette, the radius scale and this exact example applied.
