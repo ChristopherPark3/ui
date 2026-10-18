@@ -1,5 +1,11 @@
 # @ceepeetres/ui
 
+## 0.5.0
+
+### Minor Changes
+
+- 1a6d359: Add Table and Breadcrumb (`BreadcrumbLink` takes `render` for Next.js `<Link>`, and stays server-importable). Storybook now has a Docs page per component and an Introduction page.
+
 ## 0.4.2
 
 ### Patch Changes
