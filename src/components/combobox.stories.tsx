@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import * as React from "react";
 import { expect, fn, waitFor, within } from "storybook/test";
+import { useFakeSearch } from "../../.storybook/use-fake-search.js";
 import {
   Combobox,
   ComboboxChip,
@@ -10,9 +12,11 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
+  ComboboxStatus,
   ComboboxValue,
 } from "./combobox.js";
 import { Field, FieldLabel } from "./field.js";
+import { SpinnerIcon } from "./icons.js";
 
 const frameworks = ["Next.js", "Remix", "Astro", "SvelteKit", "Nuxt", "Gatsby"];
 
@@ -117,3 +121,51 @@ export const Invalid: Story = {
 };
 
 export const Disabled: Story = { args: { disabled: true } };
+
+const allFrameworks = [...frameworks, "Angular", "Ember", "Qwik", "SolidStart", "Vue", "React Router"];
+
+/**
+ * Items fetched as you type. Pass the server's results as `items` with `filter={null}`,
+ * track the query with `onInputValueChange`, and say what's happening in `<ComboboxStatus>`.
+ */
+export const Async: Story = {
+  render: function Render(args) {
+    const [query, setQuery] = React.useState("");
+    const { results, loading } = useFakeSearch(allFrameworks, query);
+    return (
+      <Field>
+        <FieldLabel>Framework</FieldLabel>
+        <Combobox {...args} items={results} filter={null} onInputValueChange={setQuery}>
+          <ComboboxInput placeholder="Search frameworks…" loading={loading} />
+          <ComboboxContent>
+            <ComboboxStatus>
+              {loading && (
+                <>
+                  <SpinnerIcon />
+                  Searching…
+                </>
+              )}
+            </ComboboxStatus>
+            <ComboboxEmpty>{!loading && (query ? "No frameworks found." : "Type to search.")}</ComboboxEmpty>
+            <ComboboxList aria-label="Frameworks">
+              {(item: string) => (
+                <ComboboxItem key={item} value={item}>
+                  {item}
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+      </Field>
+    );
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    const input = canvas.getByRole("combobox", { name: "Framework" });
+    await userEvent.type(input, "so");
+    const body = within(document.body);
+    await expect(input).toHaveAttribute("aria-busy", "true");
+    await waitFor(() => expect(body.getByText("Searching…")).toBeVisible());
+    await userEvent.click(await body.findByRole("option", { name: "SolidStart" }));
+    await expect(args.onValueChange).toHaveBeenCalledWith("SolidStart", expect.anything());
+  },
+};

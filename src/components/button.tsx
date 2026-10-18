@@ -6,6 +6,7 @@ import type { VariantProps } from "class-variance-authority";
 import { animate, motion, useMotionValue, useReducedMotion, type MotionValue } from "motion/react";
 import { cn } from "../lib/cn.js";
 import { buttonVariants } from "./button-variants.js";
+import { SpinnerIcon } from "./icons.js";
 
 export interface ButtonProps
   extends Omit<ButtonPrimitive.Props, "className">,
@@ -42,7 +43,7 @@ export function Button({
 }: ButtonProps) {
   const iconOnly = size === "icon" || size === "icon-sm" || size === "icon-lg";
   const animated = animateWidth && !iconOnly;
-  const content = loading ? (iconOnly ? <Spinner /> : withSpinner(children)) : children;
+  const content = loading ? (iconOnly ? <SpinnerIcon /> : withSpinner(children)) : children;
   const [contentRef, width] = useAnimatedWidth(animated);
 
   return (
@@ -119,13 +120,5 @@ function withSpinner(children: React.ReactNode): React.ReactNode {
   }
   const hasLeadingIcon =
     React.isValidElement(first) && rest.some((node) => typeof node === "string" || typeof node === "number");
-  return [<Spinner key="spinner" />, ...(hasLeadingIcon ? rest : nodes)];
-}
-
-function Spinner() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-spin" aria-hidden>
-      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-    </svg>
-  );
+  return [<SpinnerIcon key="spinner" />, ...(hasLeadingIcon ? rest : nodes)];
 }
