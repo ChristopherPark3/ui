@@ -1,5 +1,11 @@
 # @ceepeetres/ui
 
+## 0.4.0
+
+### Minor Changes
+
+- 3ed91ba: Add Textarea (auto-growing, clearable, Field-aware), Card, Badge, Alert and Kbd.
+
 ## 0.3.0
 
 ### Minor Changes
