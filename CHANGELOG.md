@@ -1,5 +1,11 @@
 # @ceepeetres/ui
 
+## 0.4.1
+
+### Patch Changes
+
+- 8527ee8: Fix text contrast on destructive Button and Badge in dark mode.
+
 ## 0.4.0
 
 ### Minor Changes
