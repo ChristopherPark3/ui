@@ -6,13 +6,14 @@ import {
   fieldControl,
   focusRing,
   invalid,
+  listStatus,
   menuLabel,
   menuSeparator,
   popupItem,
   popupSurface,
   popupTransition,
 } from "../lib/styles.js";
-import { XIcon } from "./icons.js";
+import { SpinnerIcon, XIcon } from "./icons.js";
 
 /**
  * A text input with suggestions. Unlike Combobox, the value is whatever was typed;
@@ -23,9 +24,11 @@ export const Autocomplete = AutocompletePrimitive.Root;
 export interface AutocompleteInputProps extends AutocompletePrimitive.Input.Props {
   /** Show a × button once something is typed. @default true */
   clearable?: boolean;
+  /** Results are being fetched: shows a spinner in place of the ×. Announce it with `<AutocompleteStatus>`. */
+  loading?: boolean;
 }
 
-export function AutocompleteInput({ className, clearable = true, ...props }: AutocompleteInputProps) {
+export function AutocompleteInput({ className, clearable = true, loading = false, ...props }: AutocompleteInputProps) {
   return (
     <AutocompletePrimitive.InputGroup data-slot="autocomplete-input-group" className="relative flex w-full min-w-0 items-center">
       <AutocompletePrimitive.Input
@@ -36,13 +39,18 @@ export function AutocompleteInput({ className, clearable = true, ...props }: Aut
             focusRing,
             invalid,
             "py-1 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
-            clearable && "pr-8",
+            (clearable || loading) && "pr-8",
           ),
           className,
         )}
+        aria-busy={loading || undefined}
         {...props}
       />
-      {clearable && (
+      {loading ? (
+        <span data-slot="autocomplete-spinner" className={cn(clearButton, "pointer-events-none")}>
+          <SpinnerIcon />
+        </span>
+      ) : clearable && (
         <AutocompletePrimitive.Clear
           data-slot="autocomplete-clear"
           aria-label="Clear"
@@ -88,6 +96,7 @@ export function AutocompleteContent({
   );
 }
 
+/** Base UI doesn't name the listbox; pass `aria-label` (e.g. "Tags") so screen readers announce it. */
 export function AutocompleteList({ className, ...props }: AutocompletePrimitive.List.Props) {
   return (
     <AutocompletePrimitive.List
@@ -112,6 +121,16 @@ export function AutocompleteEmpty({ className, ...props }: AutocompletePrimitive
       className={cnState("py-6 text-center text-sm text-muted-foreground empty:hidden", className)}
       {...props}
     />
+  );
+}
+
+/**
+ * Announces the list's state to screen readers ("Searching…", "3 results"). Keep it mounted and
+ * change its children; it collapses when empty. Use it with `loading` for results fetched as the user types.
+ */
+export function AutocompleteStatus({ className, ...props }: AutocompletePrimitive.Status.Props) {
+  return (
+    <AutocompletePrimitive.Status data-slot="autocomplete-status" className={cnState(listStatus, className)} {...props} />
   );
 }
 

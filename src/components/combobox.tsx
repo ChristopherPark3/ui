@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { cn, cnState } from "../lib/cn.js";
-import { menuLabel, menuSeparator, popupItem, popupSurface, popupTransition } from "../lib/styles.js";
-import { CheckIcon, ChevronsUpDownIcon, XIcon } from "./icons.js";
+import { listStatus, menuLabel, menuSeparator, popupItem, popupSurface, popupTransition } from "../lib/styles.js";
+import { CheckIcon, ChevronsUpDownIcon, SpinnerIcon, XIcon } from "./icons.js";
 
 /**
  * A text input that filters a list of `items` and selects one (or several with `multiple`).
@@ -25,9 +25,17 @@ export interface ComboboxInputProps extends ComboboxPrimitive.Input.Props {
   showTrigger?: boolean;
   /** Show a × button that clears the value. It only appears once there's something to clear. @default true */
   showClear?: boolean;
+  /** Items are being fetched: shows a spinner in place of the ×. Announce it with `<ComboboxStatus>`. */
+  loading?: boolean;
 }
 
-export function ComboboxInput({ className, showTrigger = true, showClear = true, ...props }: ComboboxInputProps) {
+export function ComboboxInput({
+  className,
+  showTrigger = true,
+  showClear = true,
+  loading = false,
+  ...props
+}: ComboboxInputProps) {
   return (
     <ComboboxPrimitive.InputGroup data-slot="combobox-input-group" className={inputGroup}>
       <ComboboxPrimitive.Input
@@ -36,10 +44,15 @@ export function ComboboxInput({ className, showTrigger = true, showClear = true,
           "h-9 min-w-0 flex-1 bg-transparent px-3 text-base outline-none placeholder:text-muted-foreground md:text-sm",
           className,
         )}
+        aria-busy={loading || undefined}
         {...props}
       />
       <div className="flex items-center gap-0.5 pr-1">
-        {showClear && (
+        {loading ? (
+          <span data-slot="combobox-spinner" className={cn(inlineButton, "pointer-events-none")}>
+            <SpinnerIcon />
+          </span>
+        ) : showClear && (
           <ComboboxPrimitive.Clear
             data-slot="combobox-clear"
             aria-label="Clear"
@@ -143,6 +156,7 @@ export function ComboboxContent({
   );
 }
 
+/** Base UI doesn't name the listbox; pass `aria-label` (e.g. "Frameworks") so screen readers announce it. */
 export function ComboboxList({ className, ...props }: ComboboxPrimitive.List.Props) {
   return (
     <ComboboxPrimitive.List
@@ -176,6 +190,14 @@ export function ComboboxEmpty({ className, ...props }: ComboboxPrimitive.Empty.P
       {...props}
     />
   );
+}
+
+/**
+ * Announces the list's state to screen readers ("Searching…", "3 results"). Keep it mounted and
+ * change its children; it collapses when empty. Use it with `loading` for items fetched as the user types.
+ */
+export function ComboboxStatus({ className, ...props }: ComboboxPrimitive.Status.Props) {
+  return <ComboboxPrimitive.Status data-slot="combobox-status" className={cnState(listStatus, className)} {...props} />;
 }
 
 export function ComboboxGroup(props: ComboboxPrimitive.Group.Props) {

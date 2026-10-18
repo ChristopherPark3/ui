@@ -50,3 +50,7 @@ export const dialogPopup =
 /** The × that clears a text input. Positioned inside the field's right edge; fades in once there's a value. */
 export const clearButton =
   "absolute top-1/2 right-1.5 flex size-6 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-[opacity,color,background-color] duration-150 outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[hidden]:pointer-events-none data-[hidden]:opacity-0 motion-reduce:transition-none [&_svg]:size-3.5";
+
+/** Status row at the top of an async Combobox/Autocomplete popup. Collapses when empty but stays mounted for screen readers. */
+export const listStatus =
+  "flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground empty:p-0 [&_svg]:size-4 [&_svg]:shrink-0";
