@@ -1,2 +1,8 @@
 @import "tailwindcss";
 @import "../src/styles.css";
+
+/* Portaled content (dialogs, popovers, toasts) renders on body, so give it the theme background too. */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}

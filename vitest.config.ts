@@ -25,24 +25,24 @@ export default defineConfig({
     include: [...baseUiEntries, 'motion/react'],
   },
   test: {
-    projects: [
-      {
-        extends: true,
-        plugins: [
-          // The plugin will run tests for the stories defined in your Storybook config
-          // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-          storybookTest({ configDir: path.join(dirname, '.storybook') }),
-        ],
-        test: {
-          name: 'storybook',
-          browser: {
-            enabled: true,
-            headless: true,
-            provider: playwright({}),
-            instances: [{ browser: 'chromium' }],
-          },
+    // Every story runs twice, once per theme, so dark-mode contrast is checked too.
+    projects: (['light', 'dark'] as const).map((theme) => ({
+      extends: true,
+      plugins: [
+        // The plugin will run tests for the stories defined in your Storybook config
+        // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
+        storybookTest({ configDir: path.join(dirname, '.storybook') }),
+      ],
+      define: { 'import.meta.env.STORYBOOK_THEME': JSON.stringify(theme) },
+      test: {
+        name: theme === 'light' ? 'storybook' : `storybook (${theme})`,
+        browser: {
+          enabled: true,
+          headless: true,
+          provider: playwright({}),
+          instances: [{ browser: 'chromium' }],
         },
       },
-    ],
+    })),
   },
 });

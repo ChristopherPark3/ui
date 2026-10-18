@@ -9,7 +9,8 @@ export const badgeVariants = cva(
       variant: {
         default: "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
         secondary: "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/80",
-        destructive: "border-transparent bg-destructive text-destructive-foreground [a&]:hover:bg-destructive/90",
+        destructive:
+          "border-transparent bg-destructive text-destructive-foreground dark:bg-destructive/60 [a&]:hover:bg-destructive/90 dark:[a&]:hover:bg-destructive/50",
         outline: "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
       },
     },

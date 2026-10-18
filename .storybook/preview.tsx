@@ -13,7 +13,8 @@ const preview: Preview = {
       },
     },
   },
-  initialGlobals: { theme: "light" },
+  // The test run sets STORYBOOK_THEME to check every story in dark mode too (see vitest.config.ts).
+  initialGlobals: { theme: import.meta.env.STORYBOOK_THEME ?? "light" },
   decorators: [
     (Story, context) => {
       const dark = context.globals.theme === "dark";
@@ -34,8 +35,8 @@ const preview: Preview = {
       },
     },
     a11y: {
-      // 'todo' shows violations in the test UI; switch to 'error' to fail CI on them.
-      test: "todo",
+      // Fail the test run (and CI) on any violation, in both themes.
+      test: "error",
     },
   },
 };
