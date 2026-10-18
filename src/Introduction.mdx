@@ -4,26 +4,42 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 # @ceepeetres/ui
 
-Personal component library built on Tailwind v4 and Base UI primitives.
+React components for Next.js App Router apps, built on [Base UI](https://base-ui.com) and Tailwind v4.
+Each component's **Docs** page lists its props and shows every story with notes on when to use it.
 
-## Use it in an app
+## Install
 
 ```bash
-pnpm add @ceepeetres/ui
+pnpm add @ceepeetres/ui motion
 ```
 
+Peers: `react` and `react-dom` 19+, `tailwindcss` 4+, `motion` 14.
+
+## Set up styles
+
+The package ships Tailwind class names, not compiled CSS. In the app's global CSS:
+
 ```css
-/* app/globals.css */
 @import "tailwindcss";
 @import "@ceepeetres/ui/styles.css";
 ```
 
+To add a brand color or change corner rounding, override a few tokens after that import. See **Foundations/Theming**.
+Use the **Theme** toolbar button above to preview dark mode.
+
+## Use
+
 ```tsx
-import { cn } from "@ceepeetres/ui";
+import { Button, Dialog, DialogContent, DialogTrigger } from "@ceepeetres/ui";
+
+<Dialog>
+  <DialogTrigger render={<Button />}>Open</DialogTrigger>
+  <DialogContent>…</DialogContent>
+</Dialog>;
 ```
 
-## Theming
-
-All colors are CSS variables (`--primary`, `--background`, …) defined in `styles.css`.
-Override them in your app's `:root` / `.dark` to re-brand without touching the library.
-Use the **Theme** toolbar button above to preview dark mode.
+- **No `asChild`.** To render a part as another element, pass `render`: `<DialogTrigger render={<Button />} />`.
+- **Links styled as buttons or badges:** put `buttonVariants()` / `badgeVariants()` on the `<Link>` itself.
+- **Server components:** most components can be imported from a server component. Only Button, Input, Textarea, ToggleGroup and Toast are client components.
+- **Async data:** components take plain props (`loading`, `items`, `aria-invalid`) and work with any data layer. See the `Async` stories on Combobox and Autocomplete, plus Spinner, Skeleton and Empty.
+- **Forms:** wrap controls in `<Field>` with `<FieldLabel>`, `<FieldDescription>` and `<FieldError>` for labeling and error states.

@@ -8,6 +8,7 @@ Personal React component library. Published to npm, consumed by apps made from `
 - `pnpm storybook`: dev server at http://localhost:6006
 - `pnpm test`: runs every story as a Vitest browser test (play functions and a11y checks)
 - `pnpm typecheck` / `pnpm build`
+- `pnpm check:client`: fails if a component's `"use client"` doesn't match what it does (runs in CI)
 - `pnpm changeset`: required for any user-facing change (new component = minor, fix = patch)
 
 ## Stack
@@ -31,7 +32,7 @@ Tailwind v4 (no tailwind.config; tokens live in `src/styles.css`), [Base UI](htt
 - New design tokens go in `src/styles.css` in all three places: `:root`, `.dark`, and `@theme inline`. The default theme stays neutral; apps add their brand by overriding tokens (README → Theming), so never hard-code a brand color in a component. Radii come from `--radius` only (`--radius-sm` … `--radius-2xl` are derived), so use the radius scale rather than arbitrary values (tiny fixed shapes like the checkbox's `rounded-[5px]` and the tooltip arrow are the exception).
 - Focus style: `outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50`. Disabled style: `disabled:pointer-events-none disabled:opacity-50` on plain elements; on Base UI parts use `data-[disabled]:` instead (it also covers `focusableWhenDisabled`, which uses `aria-disabled`).
 - Use Base UI for anything with focus management, keyboard navigation, or ARIA patterns. Don't hand-roll them.
-- Base UI has no `asChild`. To render a part as another element, pass `render` (`<DialogTrigger render={<Button />} />`). Links styled as buttons use `buttonVariants()` on the `<a>`/`<Link>` directly, not `<Button render>` (Base UI would give it `role="button"`). For our own non-Base UI components that need to be polymorphic, use `useRender` from `@base-ui/react/use-render`.
+- Base UI has no `asChild`. To render a part as another element, pass `render` (`<DialogTrigger render={<Button />} />`). Links styled as buttons use `buttonVariants()` on the `<a>`/`<Link>` directly, not `<Button render>` (Base UI would give it `role="button"`). For our own non-Base UI components that need to be polymorphic, use `useRender` from `@base-ui/react/use-render` in a client file; if the component should stay server-importable (like `BreadcrumbLink`), take a `render` element and merge props with `React.cloneElement` instead, since that isn't a hook.
 - Style Base UI state with its data attributes, not Radix-style `data-[state=open]`: `data-[open]:`, `data-[disabled]:`, `data-[checked]:`, `data-[highlighted]:`, etc. Enter/exit animations use `data-[starting-style]:` and `data-[ending-style]:` with a CSS `transition`.
 - No new runtime dependencies without asking. Icons are inline SVG for now.
 - Animation: enter/exit (popups, dialogs, drawers, accordion/collapsible height, indicators) uses CSS transitions on Base UI's `data-[starting-style]` / `data-[ending-style]` and CSS variables (`--transform-origin`, `--accordion-panel-height`, `--active-tab-left`, …). They're interruptible and work with uncontrolled components. Use [Motion](https://motion.dev) (`motion/react`, a **peer** dependency) only for what CSS can't do, like Button's measured width animation; any file using it needs `"use client"`. Always respect reduced motion (`motion-reduce:transition-none`, `useReducedMotion`).
@@ -47,4 +48,4 @@ Tailwind v4 (no tailwind.config; tokens live in `src/styles.css`), [Base UI](htt
 
 ## Definition of done
 
-Component, story, export from `src/index.ts`, `pnpm typecheck && pnpm test` passing, and a changeset.
+Component, story, export from `src/index.ts`, `pnpm typecheck && pnpm check:client && pnpm test` passing, and a changeset.

@@ -2,6 +2,8 @@ import type { Preview } from "@storybook/react-vite";
 import "./storybook.css";
 
 const preview: Preview = {
+  // A generated Docs page per component: props table plus every story, with their JSDoc as usage notes.
+  tags: ["autodocs"],
   globalTypes: {
     theme: {
       description: "Color theme",
