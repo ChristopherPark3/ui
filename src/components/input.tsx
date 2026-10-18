@@ -4,6 +4,7 @@ import * as React from "react";
 import { Input as InputPrimitive } from "@base-ui/react/input";
 import { cn, cnState } from "../lib/cn.js";
 import { clearButton, fieldControl, focusRing, invalid } from "../lib/styles.js";
+import { clearButtonProps, useClearable } from "../lib/use-clearable.js";
 import { XIcon } from "./icons.js";
 
 // Types where a clear button makes no sense (or the browser already provides one).
@@ -28,33 +29,25 @@ export function Input({
   readOnly,
   ...props
 }: InputProps) {
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const controlled = props.value !== undefined;
-  const [uncontrolledFilled, setUncontrolledFilled] = React.useState(() => hasText(props.defaultValue));
-  const filled = controlled ? hasText(props.value) : uncontrolledFilled;
   const showClear = clearable && !UNCLEARABLE.has(type ?? "text");
-  const canClear = showClear && filled && !disabled && !readOnly;
-
-  function clear() {
-    const input = inputRef.current;
-    if (!input) return;
-    // Set the value the way the browser would, so React's onChange (and Base UI's onValueChange) fire.
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(input, "");
-    input.dispatchEvent(new Event("input", { bubbles: true }));
-    input.focus();
-  }
+  const clearState = useClearable<HTMLInputElement>({
+    value: props.value,
+    defaultValue: props.defaultValue,
+    onChange,
+    ref,
+    enabled: showClear,
+    disabled,
+    readOnly,
+  });
 
   const input = (
     <InputPrimitive
       data-slot="input"
       type={type}
-      ref={mergeRefs(inputRef, ref)}
+      ref={clearState.ref}
       disabled={disabled}
       readOnly={readOnly}
-      onChange={(event) => {
-        if (!controlled) setUncontrolledFilled(event.currentTarget.value !== "");
-        onChange?.(event);
-      }}
+      onChange={clearState.onChange}
       className={cnState(
         cn(
           fieldControl,
@@ -74,42 +67,9 @@ export function Input({
   return (
     <span data-slot="input-group" className="relative flex w-full min-w-0 items-center">
       {input}
-      <button
-        type="button"
-        data-slot="input-clear"
-        aria-label="Clear"
-        // Out of the tab order: keyboard users can select and delete. Still reachable by screen readers.
-        tabIndex={-1}
-        data-hidden={canClear ? undefined : ""}
-        aria-hidden={canClear ? undefined : true}
-        disabled={!canClear}
-        onClick={clear}
-        className={clearButton}
-      >
+      <button data-slot="input-clear" className={clearButton} {...clearButtonProps(clearState.canClear, clearState.clear)}>
         <XIcon />
       </button>
     </span>
   );
-}
-
-function hasText(value: unknown) {
-  return value !== undefined && value !== null && String(value) !== "";
-}
-
-function mergeRefs<T>(...refs: (React.Ref<T> | undefined)[]): React.RefCallback<T> {
-  return (node) => {
-    const cleanups = refs.map((ref) => {
-      if (typeof ref === "function") return ref(node);
-      if (ref) ref.current = node;
-    });
-    return () =>
-      cleanups.forEach((cleanup, i) => {
-        if (typeof cleanup === "function") cleanup();
-        else {
-          const ref = refs[i];
-          if (typeof ref === "function") ref(null);
-          else if (ref) ref.current = null;
-        }
-      });
-  };
 }

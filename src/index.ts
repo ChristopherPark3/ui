@@ -6,6 +6,7 @@ export {
   AccordionTrigger,
   AccordionPanel,
 } from "./components/accordion.js";
+export { Alert, AlertTitle, AlertDescription, type AlertProps } from "./components/alert.js";
 export {
   AlertDialog,
   AlertDialogTrigger,
@@ -30,8 +31,18 @@ export {
   AutocompleteSeparator,
 } from "./components/autocomplete.js";
 export { Avatar, AvatarImage, AvatarFallback } from "./components/avatar.js";
+export { Badge, badgeVariants, type BadgeProps } from "./components/badge.js";
 export { Button, type ButtonProps } from "./components/button.js";
 export { buttonVariants } from "./components/button-variants.js";
+export {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardAction,
+  CardContent,
+  CardFooter,
+} from "./components/card.js";
 export { Checkbox, CheckboxGroup } from "./components/checkbox.js";
 export { Collapsible, CollapsibleTrigger, CollapsiblePanel } from "./components/collapsible.js";
 export {
@@ -100,6 +111,7 @@ export { Field, FieldLabel, FieldDescription, FieldError, FieldItem } from "./co
 export { Fieldset, FieldsetLegend } from "./components/fieldset.js";
 export { Form } from "./components/form.js";
 export { Input, type InputProps } from "./components/input.js";
+export { Kbd, KbdGroup } from "./components/kbd.js";
 export { Label } from "./components/label.js";
 export {
   Menu,
@@ -168,6 +180,7 @@ export { Slider, type SliderProps, SliderLabel, SliderValue } from "./components
 export { Spinner } from "./components/spinner.js";
 export { Switch } from "./components/switch.js";
 export { Tabs, TabsList, type TabsListProps, TabsTab, TabsPanel } from "./components/tabs.js";
+export { Textarea, type TextareaProps } from "./components/textarea.js";
 export { Toaster, ToastProvider, useToastManager, createToastManager } from "./components/toast.js";
 export { Toggle, toggleVariants, type ToggleProps } from "./components/toggle.js";
 export { ToggleGroup, ToggleGroupItem, type ToggleGroupProps } from "./components/toggle-group.js";
