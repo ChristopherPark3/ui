@@ -1,6 +1,6 @@
 {
   "name": "@ceepeetres/ui",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Personal React component library (Tailwind v4 + Base UI)",
   "type": "module",
   "license": "MIT",
